@@ -1,4 +1,20 @@
 <template>
+  <nav class="navbar bg-body-tertiary" style="margin-top: 8%">
+    <div class="container-fluid">
+      <a class="navbar-brand">UBike</a>
+      <form class="d-flex" role="search" @submit.prevent="searchBikes">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          v-model="request"
+        />
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
   <div class="container text-center">
     <div class="row align-items-center">
       <table class="table table-hover table-bordered table-striped" style="font-size: 95%">
@@ -35,7 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="bike in bikes" :key="bike.sno">
+          <tr v-for="bike in resultBikes" :key="bike.sno">
             <td scope="col">{{ bike.sno }}</td>
             <td scope="col">{{ bike.sna }}</td>
             <td scope="col">{{ bike.sarea }}</td>
@@ -58,8 +74,22 @@ import json from '@/assets/youbike_immediate.json';
 
 const bikes = ref([]);
 
+const request = ref('');
+const resultBikes = ref([]);
+
+function searchBikes() {
+  const result = request.value.trim();
+  if (!result) {
+    resultBikes.value = bikes.value;
+    return;
+  }
+  const regex = new RegExp(result, 'gi');
+  resultBikes.value = bikes.value.filter((bike) => [...bike.ar.matchAll(regex)].length > 0);
+}
+
 onMounted(() => {
   bikes.value = json;
+  resultBikes.value = bikes.value;
 });
 
 function sortByDown(key) {
