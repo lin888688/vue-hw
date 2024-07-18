@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar bg-body-tertiary">
+  <nav class="navbar bg-body-tertiary" style="margin-top: 8%">
     <div class="container-fluid">
       <a class="navbar-brand">UBike</a>
       <form class="d-flex" role="search">
@@ -12,6 +12,4 @@
 
 <script></script>
 
-<stylescoped>
-
-</stylescoped>
+<style scoped></style>
