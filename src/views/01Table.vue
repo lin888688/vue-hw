@@ -83,6 +83,7 @@ const resultBikes = ref([]);
 function searchBikes() {
   const result = request.value.trim();
   if (!result) {
+    resultBikes.value = bikes.value;
     return;
   }
   const regex = new RegExp(result, 'gi');
