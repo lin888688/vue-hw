@@ -73,7 +73,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import json from '@/assets/youbike_immediate.json';
+import axios from 'axios';
 
 const bikes = ref([]);
 
@@ -83,7 +83,6 @@ const resultBikes = ref([]);
 function searchBikes() {
   const result = request.value.trim();
   if (!result) {
-    resultBikes.value = bikes.value;
     return;
   }
   const regex = new RegExp(result, 'gi');
@@ -91,16 +90,20 @@ function searchBikes() {
 }
 
 onMounted(() => {
-  bikes.value = json;
-  resultBikes.value = bikes.value;
+  axios
+    .get('https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json')
+    .then((response) => {
+      bikes.value = response.data;
+      resultBikes.value = response.data;
+    });
 });
 
 function sortByDown(key) {
-  bikes.value.sort((a, b) => a[key] - b[key]);
+  resultBikes.value.sort((a, b) => a[key] - b[key]);
 }
 
 function sortByUp(key) {
-  bikes.value.sort((a, b) => b[key] - a[key]);
+  resultBikes.value.sort((a, b) => b[key] - a[key]);
 }
 </script>
 
