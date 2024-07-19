@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="...">
+  <div style="text-align: center">
     <ul class="pagination" :page-count="pages">
       <li class="page-item" :disabled="isDisabled">
         <a class="page-link">上一頁</a>
@@ -17,7 +17,7 @@
         <a class="page-link" href="#">Next</a>
       </li>
     </ul>
-  </nav>
+  </div>
 </template>
 
 <script setup>

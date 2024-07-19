@@ -1,69 +1,72 @@
 <template>
-  <nav class="navbar bg-body-tertiary" style="margin-top: 8%">
-    <div class="container-fluid">
-      <a class="navbar-brand">UBike</a>
-      <form class="d-flex" role="search" @submit.prevent="searchBikes">
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-          v-model="request"
-        />
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-      </form>
-    </div>
-  </nav>
+  <div style="width: 90%; margin: auto">
+    <nav class="navbar bg-body-tertiary" style="margin-top: 8%">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">UBike</a>
+        <form class="d-flex" role="search" @submit.prevent="searchBikes">
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="輸入站點地址"
+            aria-label="Search"
+            v-model="request"
+            @input="searchBikes"
+          />
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
 
-  <div class="container text-center">
-    <div class="row align-items-center">
-      <table class="table table-hover table-bordered table-striped" style="font-size: 95%">
-        <thead>
-          <tr>
-            <th scope="col">站點編號</th>
-            <th scope="col">站點名稱</th>
-            <th scope="col">站點所在區域</th>
-            <th scope="col">站點地址</th>
+    <div class="text-center">
+      <div class="align-items-center">
+        <table class="table table-hover table-bordered table-striped" style="font-size: 95%">
+          <thead>
+            <tr>
+              <th scope="col">站點編號</th>
+              <th scope="col">站點名稱</th>
+              <th scope="col">站點所在區域</th>
+              <th scope="col">站點地址</th>
 
-            <th scope="col">
-              總車位數量
-              <img src="/arrow-down-short.svg" style="width: 20px" @click="sortByDown('total')" />
-              <img src="/arrow-up-short.svg" style="width: 20px" @click="sortByUp('total')" />
-            </th>
+              <th scope="col">
+                總車位數量
+                <img src="/arrow-down-short.svg" style="width: 20px" @click="sortByDown('total')" />
+                <img src="/arrow-up-short.svg" style="width: 20px" @click="sortByUp('total')" />
+              </th>
 
-            <th scope="col">
-              可租借的腳踏車數量
-              <img
-                src="/arrow-down-short.svg"
-                style="width: 20px"
-                @click="sortByDown('available_rent_bikes')"
-              />
-              <img
-                src="/arrow-up-short.svg"
-                style="width: 20px"
-                @click="sortByUp('available_rent_bikes')"
-              />
-            </th>
+              <th scope="col">
+                可租借的腳踏車數量
+                <img
+                  src="/arrow-down-short.svg"
+                  style="width: 20px"
+                  @click="sortByDown('available_rent_bikes')"
+                />
+                <img
+                  src="/arrow-up-short.svg"
+                  style="width: 20px"
+                  @click="sortByUp('available_rent_bikes')"
+                />
+              </th>
 
-            <th scope="col">站點緯度</th>
-            <th scope="col">站點經度</th>
-            <th scope="col">可歸還的腳踏車數量</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="bike in resultBikes" :key="bike.sno">
-            <td scope="col">{{ bike.sno }}</td>
-            <td scope="col">{{ bike.sna }}</td>
-            <td scope="col">{{ bike.sarea }}</td>
-            <td scope="col">{{ bike.ar }}</td>
-            <td scope="col">{{ bike.total }}</td>
-            <td scope="col">{{ bike.available_rent_bikes }}</td>
-            <td scope="col">{{ bike.latitude }}</td>
-            <td scope="col">{{ bike.longitude }}</td>
-            <td scope="col">{{ bike.available_return_bikes }}</td>
-          </tr>
-        </tbody>
-      </table>
+              <th scope="col">站點緯度</th>
+              <th scope="col">站點經度</th>
+              <th scope="col">可歸還的腳踏車數量</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="bike in resultBikes" :key="bike.sno">
+              <td scope="col">{{ bike.sno }}</td>
+              <td scope="col">{{ bike.sna }}</td>
+              <td scope="col">{{ bike.sarea }}</td>
+              <td scope="col">{{ bike.ar }}</td>
+              <td scope="col">{{ bike.total }}</td>
+              <td scope="col">{{ bike.available_rent_bikes }}</td>
+              <td scope="col">{{ bike.latitude }}</td>
+              <td scope="col">{{ bike.longitude }}</td>
+              <td scope="col">{{ bike.available_return_bikes }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -101,4 +104,8 @@ function sortByUp(key) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.result-Exist {
+  color: red;
+}
+</style>
