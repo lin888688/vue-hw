@@ -4,14 +4,8 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="#">UBike</a>
         <form class="d-flex" role="search" @submit.prevent="searchBikes">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="輸入站點地址"
-            aria-label="Search"
-            v-model="request"
-            @input="searchBikes"
-          />
+          <input class="form-control me-2" type="search" placeholder="輸入站點地址" aria-label="Search" v-model="request"
+            @input="searchBikes" />
           <button class="btn btn-outline-primary" type="submit">Search</button>
         </form>
       </div>
@@ -35,16 +29,8 @@
 
               <th scope="col">
                 可租借的腳踏車數量
-                <img
-                  src="/arrow-down-short.svg"
-                  style="width: 20px"
-                  @click="sortByDown('available_rent_bikes')"
-                />
-                <img
-                  src="/arrow-up-short.svg"
-                  style="width: 20px"
-                  @click="sortByUp('available_rent_bikes')"
-                />
+                <img src="/arrow-down-short.svg" style="width: 20px" @click="sortByDown('available_rent_bikes')" />
+                <img src="/arrow-up-short.svg" style="width: 20px" @click="sortByUp('available_rent_bikes')" />
               </th>
 
               <th scope="col">站點緯度</th>
@@ -57,7 +43,10 @@
               <td scope="col">{{ bike.sno }}</td>
               <td scope="col">{{ bike.sna }}</td>
               <td scope="col">{{ bike.sarea }}</td>
-              <td scope="col">{{ bike.ar }}</td>
+              <td scope="col">
+                <span v-for="part in highlight(bike.ar)" :class="{ 'result-Exist': part.highlight }" :key="part.word">{{
+                  part.word }}</span>
+              </td>
               <td scope="col">{{ bike.total }}</td>
               <td scope="col">{{ bike.available_rent_bikes }}</td>
               <td scope="col">{{ bike.latitude }}</td>
@@ -90,6 +79,19 @@ function searchBikes() {
   resultBikes.value = bikes.value.filter((bike) => [...bike.ar.matchAll(regex)].length > 0);
 }
 
+function highlight(word) {
+  const result = request.value.trim();
+  const index = word.indexOf(result);
+
+  if (index == -1) return [{ word, highlight: false }];
+
+  return [
+    { word: word.slice(0, index), highlight: false },
+    { word: word.slice(index, index + result.length), highlight: true },
+    { word: word.slice(index + result.length), highlight: false }
+  ];
+}
+
 onMounted(() => {
   axios
     .get('https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json')
@@ -106,6 +108,7 @@ function sortByDown(key) {
 function sortByUp(key) {
   resultBikes.value.sort((a, b) => b[key] - a[key]);
 }
+
 </script>
 
 <style scoped>
