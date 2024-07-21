@@ -4,8 +4,7 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="#">UBike</a>
         <form class="d-flex" role="search" @submit.prevent="searchBikes">
-          <input class="form-control me-2" type="search" placeholder="輸入站點地址" aria-label="Search" v-model="request"
-            @input="searchBikes" />
+          <input class="form-control me-2" type="search" placeholder="輸入站點地址" aria-label="Search" v-model="request" />
           <button class="btn btn-outline-primary" type="submit">Search</button>
         </form>
       </div>
@@ -44,8 +43,9 @@
               <td scope="col">{{ bike.sna }}</td>
               <td scope="col">{{ bike.sarea }}</td>
               <td scope="col">
-                <span v-for="part in highlight(bike.ar)" :class="{ 'result-Exist': part.highlight }" :key="part.word">{{
-                  part.word }}</span>
+                <span v-for="part in highlight(bike.ar)" :class="{ 'result-Exist': part.highlight }" :key="part">
+                  {{ part.word }}
+                </span>
               </td>
               <td scope="col">{{ bike.total }}</td>
               <td scope="col">{{ bike.available_rent_bikes }}</td>
@@ -61,23 +61,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, computed } from 'vue';
 
 const bikes = ref([]);
 
 const request = ref('');
-const resultBikes = ref([]);
 
-function searchBikes() {
+
+const resultBikes = computed(() => {
   const result = request.value.trim();
-  if (!result) {
-    resultBikes.value = bikes.value;
-    return;
-  }
+  if (!result) return bikes.value;
+
   const regex = new RegExp(result, 'gi');
-  resultBikes.value = bikes.value.filter((bike) => [...bike.ar.matchAll(regex)].length > 0);
-}
+  return bikes.value.filter((bike) => [...bike.ar.matchAll(regex)].length > 0);
+});
 
 function highlight(word) {
   const result = request.value.trim();
@@ -90,23 +87,23 @@ function highlight(word) {
     { word: word.slice(index, index + result.length), highlight: true },
     { word: word.slice(index + result.length), highlight: false }
   ];
+
 }
 
-onMounted(() => {
-  axios
-    .get('https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json')
-    .then((response) => {
-      bikes.value = response.data;
-      resultBikes.value = response.data;
-    });
+onMounted(async () => {
+
+  const response = await fetch('https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json');
+  const data = await response.json();
+  bikes.value = data;
+
 });
 
 function sortByDown(key) {
-  resultBikes.value.sort((a, b) => a[key] - b[key]);
+  bikes.value.sort((a, b) => a[key] - b[key]);
 }
 
 function sortByUp(key) {
-  resultBikes.value.sort((a, b) => b[key] - a[key]);
+  bikes.value.sort((a, b) => b[key] - a[key]);
 }
 
 </script>
